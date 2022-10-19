@@ -32,6 +32,11 @@ class ThemeSerializer(serializers.ModelSerializer):
         theme.author.add(self.context['request'].user)
         return theme
 
+    def validate(self, data):
+        theme = Theme.objects.get(title=data.get('title'))
+        if theme in self.context['request'].user.themes.all():
+            raise serializers.ValidationError('You already have this theme')
+
     class Meta:
         fields = '__all__'
         model = Theme

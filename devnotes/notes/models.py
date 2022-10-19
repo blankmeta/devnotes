@@ -17,10 +17,10 @@ class Theme(models.Model):
         super(Theme, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.author} {self.title}'
+        return f'Title - {self.title} | Slug - {self.slug}'
 
     def __repr__(self):
-        return f'{self.author} {self.title}'
+        return f'Title - {self.title} | Slug - {self.slug}'
 
 
 class Note(models.Model):
@@ -33,7 +33,10 @@ class Note(models.Model):
                               related_name='notes')
 
     def __str__(self):
-        return self.title
+        return f'{self.title} {self.author}'
+
+    def __repr__(self):
+        return f'{self.title} {self.author}'
 
     class Meta:
         ordering = ['pub_date']

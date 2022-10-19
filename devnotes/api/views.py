@@ -28,6 +28,13 @@ class ThemeViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
+    def perform_destroy(self, instance):
+        instance.author.remove(self.request.user)
+        Note.objects.select_related(
+            'author').select_related(
+            'theme').filter(
+            author=self.request.user, theme=instance).delete()
+
 
 class NoteViewSet(viewsets.ModelViewSet):
     serializer_class = NoteSerializer
