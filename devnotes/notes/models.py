@@ -17,10 +17,10 @@ class Theme(models.Model):
         super(Theme, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f'Title - {self.title} | Slug - {self.slug}'
+        return self.slug
 
     def __repr__(self):
-        return f'Title - {self.title} | Slug - {self.slug}'
+        return self.slug
 
 
 class Note(models.Model):

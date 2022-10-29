@@ -23,7 +23,8 @@ class ThemeViewSet(viewsets.ModelViewSet):
     serializer_class = ThemeSerializer
 
     def get_queryset(self):
-        return Theme.objects.filter(author=self.request.user.id)
+        return Theme.objects.prefetch_related('author').filter(
+            author=self.request.user.id)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -44,7 +45,8 @@ class NoteViewSet(viewsets.ModelViewSet):
     search_fields = ('title',)
 
     def get_queryset(self):
-        return Note.objects.filter(author=self.request.user.id)
+        return Note.objects.select_related('author').filter(
+            author=self.request.user.id)
 
     def perform_create(self, serializer):
         theme = get_object_or_404(Theme, slug=self.request.data['theme'],
