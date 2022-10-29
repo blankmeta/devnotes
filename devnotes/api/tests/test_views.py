@@ -76,7 +76,7 @@ class TestApi(TestCase):
         self.assertEqual(response.status_code, HTTP_201_CREATED)
 
     def test_authenticated_user_get_notes(self):
-        """Аутентифицированный пользователь может получить свои темы."""
+        """Аутентифицированный пользователь может получить свои заметки."""
         response = self.authorized_client.get(self.baseurl + 'notes/')
 
         self.assertEqual(len(response.data), self.NUMBER_OF_NOTES)
