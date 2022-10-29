@@ -14,7 +14,7 @@ class TestApi(TestCase):
     def setUp(self):
         # Создаем авторизованный клиент
         auth_user_username = 'auth_user'
-        auth_user_password = 'pswd'
+        auth_user_password = 'common_password'
         self.user = User.objects.create_user(username=auth_user_username,
                                              password=auth_user_password)
         self.authorized_client = APIClient()
