@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from notes.models import Theme, Note
@@ -33,9 +34,12 @@ class ThemeSerializer(serializers.ModelSerializer):
         return theme
 
     def validate(self, data):
-        theme = Theme.objects.get(title=data.get('title'))
-        if theme in self.context['request'].user.themes.all():
-            raise serializers.ValidationError('You already have this theme')
+        if len(Theme.objects.filter(title=data.get('title'))) != 0:
+            theme = Theme.objects.get(title=data.get('title'))
+            if theme in self.context['request'].user.themes.all():
+                raise serializers.ValidationError(
+                    'You already have this theme')
+        return data
 
     class Meta:
         fields = '__all__'
