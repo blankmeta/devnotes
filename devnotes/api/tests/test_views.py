@@ -1,5 +1,5 @@
 from django.test import TestCase
-from rest_framework.status import HTTP_201_CREATED
+from rest_framework.status import HTTP_201_CREATED, HTTP_401_UNAUTHORIZED
 from rest_framework.test import APIClient
 
 from notes.models import User, Theme, Note
@@ -47,10 +47,8 @@ class TestApi(TestCase):
 
     def test_authenticated_user_create_new_theme(self):
         """Аутентифицированный пользователь может создать новую тему."""
-        theme_title = 'new_theme'
-
         response_body = {
-            'title': theme_title
+            'title': 'new_theme',
         }
         response = self.authorized_client.post(self.baseurl + 'themes/',
                                                data=response_body,
@@ -80,3 +78,39 @@ class TestApi(TestCase):
         response = self.authorized_client.get(self.baseurl + 'notes/')
 
         self.assertEqual(len(response.data), self.NUMBER_OF_NOTES)
+
+    def test_unauthenticated_user_get_themes(self):
+        """Неаутентифицированный пользователь не может получить темы."""
+        response = self.client.get(self.baseurl + 'themes/')
+
+        self.assertEqual(response.status_code, HTTP_401_UNAUTHORIZED)
+
+    def test_unauthenticated_user_create_theme(self):
+        """Неаутентифицированный пользователь не создать новую тему."""
+        response_body = {
+            'title': 'new_theme',
+        }
+        response = self.client.post(self.baseurl + 'themes/',
+                                    data=response_body,
+                                    format='json')
+        self.assertEqual(response.status_code, HTTP_401_UNAUTHORIZED)
+
+    def test_unauthenticated_user_get_notes(self):
+        """Неаутентифицированный пользователь не может получить заметки."""
+        response = self.client.get(self.baseurl + 'notes/')
+
+        self.assertEqual(response.status_code, HTTP_401_UNAUTHORIZED)
+
+    def test_unauthenticated_user_create_note(self):
+        """Неаутентифицированный пользователь не может создать заметку."""
+        response_body = {
+            'theme': self.test_theme.slug,
+            'title': 'note_title',
+            'text': 'here is some text and code'
+        }
+
+        response = self.client.post(self.baseurl + 'notes/',
+                                    data=response_body,
+                                    format='json')
+
+        self.assertEqual(response.status_code, HTTP_401_UNAUTHORIZED)
