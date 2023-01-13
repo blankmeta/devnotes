@@ -31,6 +31,8 @@ class Note(models.Model):
     pub_date = models.DateTimeField(auto_now=True)
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE,
                               related_name='notes')
+    is_public = models.BooleanField(default=False)
+    hash_link = models.CharField(max_length=32, null=True)
 
     def __str__(self):
         return f'{self.title} {self.author}'
