@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -84,6 +84,8 @@ class GetNoteByHash(APIView):
 
 
 class GetCurrentUser(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
