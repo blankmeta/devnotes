@@ -8,17 +8,40 @@
 - _Теперь можно поделиться с другими пользователями своей заметкой. При изменении её статуса приватности на публичный автоматически генерируется hash url, по которому любой, у кого есть данная ссылка, может прочитать заметку._
 ____
 
-### UI прототипа:
+## UI прототипа:
 
 ![alt text](https://imageup.ru/img94/4170740/snimok-ekrana-2023-01-19-v-193243.jpg)
 ____
 
-Установка:
------------
 
-Установите необходимые зависимости: ```pip install -r requirements.txt```
+## Запуск:
 
-Выполните миграции ```python manage.py migrate```
+- В директории ```./infra``` поднимите контейнеры:
 
-Запустите проект ```python manage.py runserver```
+```console
+docker-compose up -d --build
+```
+- После успешного запуска контейнеров, соберите статику:
 
+```console
+docker-compose exec web python manage.py collectstatic --no-input
+```
+- Выполните миграции:
+
+```console
+docker-compose exec web python manage.py migrate
+```
+- Создайте суперюзера:
+
+```console
+docker-compose exec web python manage.py createsuperuser
+```
+___
+## Шаблон наполнения .env файла по пути ```./infra/.env```
+
+```python
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=postgres
+POSTGRES_USER=username
+POSTGRES_PASSWORD=password
+DB_HOST=db
