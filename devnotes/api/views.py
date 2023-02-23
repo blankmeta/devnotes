@@ -23,6 +23,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class ThemeViewSet(viewsets.ModelViewSet):
     serializer_class = ThemeSerializer
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter,)
+    search_fields = ('title',)
 
     def get_queryset(self):
         return Theme.objects.prefetch_related('author').filter(
